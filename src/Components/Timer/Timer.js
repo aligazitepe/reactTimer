@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from "react";
-
+const initState = {
+  current: "Pause",
+  timer: 0,
+  play: true,
+};
 export default function Timer() {
-  const [current, setCurrent] = useState("Pause");
-  const [timer, setTimer] = useState(0);
-  const [play, setPlay] = useState(true);
+  const [state, setState] = useState(initState);
   useEffect(() => {
-    if (play) {
+    if (state.play) {
       setTimeout(() => {
-        setTimer(timer + 1);
+        setState((prevState) => ({
+          ...prevState,
+          timer: state.timer + 1,
+        }));
       }, 200);
-    } else if (play === false) setTimer(0);
-  }, [timer, play]);
+    } else if (state.play === false)
+      setState((prevState) => ({
+        ...prevState,
+        timer: 0,
+      }));
+  }, [state]);
   const handleClick = (option) => () => {
     if (option === "Play") {
-      setPlay(true);
-      setCurrent("Pause");
+      setState((prevState) => ({ ...prevState, play: true, current: "Pause" }));
     } else if (option === "Pause") {
-      setCurrent("Play");
-      setPlay(null);
+      setState((prevState) => ({ ...prevState, current: "Play", play: null }));
     } else if (option === "Stop") {
-      setCurrent("Play")
-      setPlay(false);
+      setState((prevState) => ({...prevState,
+      current:"Play",play:false}))
     }
   };
   return (
     <div className="card">
-      {timer}
-      <button onClick={handleClick(current)}>{current}</button>
+      {state.timer}
+      <button onClick={handleClick(state.current)}>{state.current}</button>
       <button onClick={handleClick("Stop")}>Stop</button>
     </div>
   );
